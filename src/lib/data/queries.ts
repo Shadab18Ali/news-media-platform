@@ -13,11 +13,9 @@ const FULL_FIELDS = "*,category:categories(id,name,slug),author:authors(id,name,
 
 type Cards = ArticleCardData[];
 
+// Exact time: an article published a second ago must be visible immediately (RLS enforces the same rule).
 function nowIso() {
-  // Truncate to the minute so ISR/cache keys and queries stay stable within a request burst.
-  const d = new Date();
-  d.setSeconds(0, 0);
-  return d.toISOString();
+  return new Date().toISOString();
 }
 
 function fail(scope: string, error: { message: string } | null): void {

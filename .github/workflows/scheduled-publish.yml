@@ -1,0 +1,18 @@
+# Calls the scheduled-publishing endpoint every 5 minutes. Use this when your Vercel plan only
+# allows daily cron jobs (Hobby). Requires repository secrets: SITE_URL (e.g. https://yourdomain.com)
+# and CRON_SECRET (the same value as the CRON_SECRET environment variable on Vercel).
+name: Scheduled publishing
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: ${{ vars.ENABLE_SCHEDULER == 'true' }}
+    steps:
+      - name: Trigger publisher
+        run: |
+          curl --fail --silent --show-error --max-time 60 \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.SITE_URL }}/api/cron/publish-scheduled"

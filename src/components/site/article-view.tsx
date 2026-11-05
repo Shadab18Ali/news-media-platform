@@ -82,7 +82,7 @@ export function ArticleView({ article: a, settings, related = [], adjacent, most
 
       <div className="mt-8 grid gap-10 lg:grid-cols-12">
         <div className="mx-auto w-full max-w-3xl lg:col-span-8 lg:mx-0 lg:max-w-none lg:pl-[8%]">
-          <div className="mb-8 lg:hidden"><TableOfContents items={toc} /></div>
+          <div className="mb-8 lg:hidden"><TableOfContents items={toc} idSuffix="-m" /></div>
           <div className="prose-article">
             {split ? (
               <>

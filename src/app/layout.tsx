@@ -3,11 +3,6 @@ import "./globals.css";
 import { getSettings } from "@/lib/data/settings";
 import { siteUrl } from "@/lib/utils";
 import { SITE_CONFIG } from "@/config/site";
-import { ConsentBanner } from "@/components/site/consent-banner";
-import { ThirdPartyScripts } from "@/components/site/third-party-scripts";
-import { JsonLd } from "@/components/site/json-ld";
-import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
-import { GA4_RE, GTM_RE, ADSENSE_RE } from "@/lib/settings-schema";
 
 export const revalidate = 300;
 
@@ -35,19 +30,11 @@ export async function generateViewport(): Promise<Viewport> {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const s = await getSettings();
-  const ga4 = s.integrations.ga4MeasurementId;
-  const gtm = s.integrations.gtmContainerId;
-  const adsense = s.integrations.adsensePublisherId;
-  const analyticsOn = Boolean((ga4 && GA4_RE.test(ga4)) || (gtm && GTM_RE.test(gtm)));
-  const adsOn = s.ads.enabled;
 
   return (
     <html lang={SITE_CONFIG.defaultLocale} style={{ "--brand": s.brand.primaryColor, "--accent": s.brand.accentColor } as React.CSSProperties}>
       <body className="min-h-screen antialiased">
-        <JsonLd data={[organizationSchema(s), websiteSchema(s)]} />
         {children}
-        <ConsentBanner analytics={analyticsOn} advertising={adsOn && Boolean(adsense && ADSENSE_RE.test(adsense))} />
-        <ThirdPartyScripts ga4={ga4} gtm={gtm} adsense={adsense} adsEnabled={adsOn} />
       </body>
     </html>
   );

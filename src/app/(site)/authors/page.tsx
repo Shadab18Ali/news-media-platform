@@ -4,7 +4,6 @@ import { getSettings } from "@/lib/data/settings";
 import { getAuthors } from "@/lib/data/queries";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { SmartImage } from "@/components/ui/smart-image";
-import { SITE_CONFIG } from "@/config/site";
 
 export const revalidate = 300; // must be a literal; mirrors SITE_CONFIG.revalidateSeconds
 

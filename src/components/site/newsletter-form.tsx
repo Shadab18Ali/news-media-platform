@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useActionState } from "react";
 import { subscribeNewsletter, type FormState } from "@/app/(site)/actions";
 import { Loader2 } from "lucide-react";
@@ -31,7 +32,7 @@ export function NewsletterForm({ headline, blurb, source = "site", dark }: { hea
           </div>
           <label className={`mt-3 flex items-start gap-2 text-xs ${dark ? "text-white/80" : "text-muted"}`}>
             <input type="checkbox" name="consent" required className="mt-0.5 h-4 w-4" />
-            <span>I agree to receive the newsletter and accept the <a className="underline" href="/privacy-policy">Privacy Policy</a>.</span>
+            <span>I agree to receive the newsletter and accept the <Link className="underline" href="/privacy-policy">Privacy Policy</Link>.</span>
           </label>
           {state.message && <p role="alert" className="mt-2 text-sm font-semibold text-red-600">{state.message}</p>}
         </form>

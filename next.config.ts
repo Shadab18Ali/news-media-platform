@@ -30,6 +30,8 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    // Test-only: lets the image optimiser fetch from a local stand-in storage server.
+    ...(process.env.E2E_ALLOW_LOCAL_IMAGES === "1" ? { dangerouslyAllowLocalIP: true } : {}),
     remotePatterns: host
       ? [{ ...host, pathname: "/storage/v1/object/public/**" }]
       : [],

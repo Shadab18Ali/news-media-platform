@@ -39,7 +39,7 @@ export async function Header() {
         </div>
       </div>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
-        <Link href="/" aria-label={`${settings.brand.name} home`} className="min-w-0">
+        <Link href="/" className="min-w-0">
           <Logo name={settings.brand.name} logoUrl={settings.brand.logoUrl} />
           {settings.brand.tagline && <p className="meta mt-0.5 hidden truncate sm:block">{settings.brand.tagline}</p>}
         </Link>

@@ -8,7 +8,6 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { AdSlot } from "@/components/site/ad-slot";
 import { NewsletterForm } from "@/components/site/newsletter-form";
 import { buildMetadata } from "@/lib/seo/metadata";
-import { SITE_CONFIG } from "@/config/site";
 import { Zap } from "lucide-react";
 
 export const revalidate = 300; // must be a literal; mirrors SITE_CONFIG.revalidateSeconds
@@ -73,7 +72,7 @@ export default async function HomePage() {
 
       {/* Latest feed + sidebar */}
       <div className="mt-10 grid gap-10 lg:grid-cols-12">
-        <section aria-labelledby="latest-h" className="lg:col-span-8">
+        {home.feed.length > 0 ? <section aria-labelledby="latest-h" className="lg:col-span-8">
           <SectionHeading title="Latest news" id="latest-h" href="/search?q=" />
           <div className="divide-y divide-rule">
             {home.feed.map((a, i) => (
@@ -83,7 +82,7 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
-        </section>
+        </section> : <div className="lg:col-span-8" />}
         <aside aria-label="Sidebar" className="space-y-10 lg:col-span-4">
           {home.mostRead.length > 0 && (
             <section aria-labelledby="mr-h">

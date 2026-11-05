@@ -7,7 +7,6 @@ import { JsonLd } from "@/components/site/json-ld";
 import { ViewCounter } from "@/components/site/view-counter";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/schema";
-import { SITE_CONFIG } from "@/config/site";
 import { stripHtml, truncate } from "@/lib/utils";
 
 export const revalidate = 300; // must be a literal; mirrors SITE_CONFIG.revalidateSeconds

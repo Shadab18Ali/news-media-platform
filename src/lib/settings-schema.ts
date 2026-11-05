@@ -24,7 +24,7 @@ export const brandSchema = z.object({
   primaryColor: color,
   accentColor: color,
   defaultOgImage: optUrl,
-  foundedYear: z.coerce.number().int().min(1900).max(2100).optional(),
+  foundedYear: z.preprocess(emptyToUndef, z.coerce.number().int().min(1900).max(2100).optional()),
   twitterHandle: z.preprocess(emptyToUndef, z.string().trim().regex(/^@?[A-Za-z0-9_]{1,15}$/, "Handle like @brand").optional()),
   facebook: optUrl,
   instagram: optUrl,

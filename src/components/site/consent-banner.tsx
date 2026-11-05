@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { OPEN_CONSENT_EVENT } from "@/lib/consent";
 import { saveConsent, useConsent } from "./consent-store";
@@ -36,7 +37,7 @@ export function ConsentBanner({ analytics, advertising }: { analytics: boolean; 
           <p className="font-semibold text-ink">Your privacy choices</p>
           <p className="mt-1 text-muted">
             We use cookies to measure how the site is used{advertising ? " and to show and measure advertising" : ""}. Essential cookies are always on.
-            Read our <a className="underline" href="/privacy-policy">Privacy Policy</a>.
+            Read our <Link className="underline" href="/privacy-policy">Privacy Policy</Link>.
           </p>
           {custom && (
             <div className="mt-3 space-y-2">
