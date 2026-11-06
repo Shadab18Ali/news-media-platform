@@ -9,6 +9,7 @@ Copy `.env.example` to `.env.local` for local work; set the same names in Vercel
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Yes | Public anon key. Safe to expose: Row Level Security limits it to published content. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes (for newsletter, contact form, cron) | **No** | Bypasses RLS. Server only; `src/lib/supabase/admin.ts` imports `server-only` so builds fail if it leaks to client code. Never prefix with `NEXT_PUBLIC_`. |
 | `CRON_SECRET` | Yes (for scheduled publishing) | No | Random string ≥ 16 chars (`openssl rand -hex 32`). `/api/cron/*` rejects requests without `Authorization: Bearer <secret>`. Vercel Cron sends it automatically. |
+| `CONNECTOR_API_KEY` | No | No | Enables `/api/connector/*` so an external writer (e.g. a Custom GPT) can submit **drafts**. 32+ random characters. Unset = connector disabled (503). See `CONNECTOR_GUIDE.md`. |
 | `AI_PROVIDER` | No | No | `none` (default), `openai-compatible` or `anthropic`. |
 | `AI_API_KEY` | No | No | Key for the chosen drafting provider. |
 | `AI_MODEL` | No | No | Model name for the provider. |

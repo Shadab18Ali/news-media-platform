@@ -41,3 +41,4 @@ Without Supabase variables the site still builds and shows a "not connected" not
 | [CONTENT_PUBLISHING_GUIDE.md](CONTENT_PUBLISHING_GUIDE.md) | Daily workflow, editorial rules, drafting assistant |
 | [SEO_GUIDE.md](SEO_GUIDE.md) | SEO features, Search Console, Google News readiness |
 | [MONETISATION_GUIDE.md](MONETISATION_GUIDE.md) | AdSense, affiliate, sponsored, direct ads |
+| [CONNECTOR_GUIDE.md](CONNECTOR_GUIDE.md) | Send drafts from your own ChatGPT to the admin |
