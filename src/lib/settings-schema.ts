@@ -73,6 +73,8 @@ export const featuresSchema = z.object({
   newsletterHeadline: z.string().trim().max(120),
   newsletterBlurb: z.string().trim().max(300),
   affiliateDisclosure: z.string().trim().max(600),
+  /** 0 = off. Machine-written drafts nobody has touched are published after this many hours (clearly labelled). */
+  autoPublishHours: z.preprocess((v) => (v === "" || v === undefined ? 0 : v), z.coerce.number().int().min(0).max(168)),
   sponsoredLabel: z.string().trim().max(60),
 });
 
@@ -133,5 +135,6 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     affiliateDisclosure:
       "This article contains affiliate links. If you buy through them we may earn a commission at no extra cost to you. It never influences our editorial judgement.",
     sponsoredLabel: "Sponsored",
+    autoPublishHours: 0,
   },
 };

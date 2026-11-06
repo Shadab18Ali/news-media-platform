@@ -13,6 +13,7 @@ Open **SQL Editor → New query** and run each of the **five** files from `supab
 2. `20260101000002_rls.sql` — Row Level Security policies
 3. `20260101000003_storage.sql` — public `media` bucket + upload policies
 4. `20260101000004_seed.sql` — ten starter categories (no articles)
+6. `20260101000006_auto_publish.sql` — adds the `auto_published` flag used by the optional 2-hour auto-publish feature (needed for it; harmless if unused)
 5. `20260101000005_api_privileges.sql` — lets the website's Data API reach the tables (required on newer Supabase projects, which do not grant table access automatically; Row Level Security still controls which rows are visible)
 
 (Or with the Supabase CLI: `supabase link --project-ref <ref>` then `supabase db push`.)

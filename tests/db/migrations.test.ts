@@ -146,3 +146,12 @@ describe("migrations", () => {
     expect(r.rows.map((x) => x.slug)).toContain("quantum-chips");
   });
 });
+
+describe("auto-publish migration", () => {
+  it("auto-published machine drafts are allowed; ordinary unreviewed ones are still refused", async () => {
+    await db.query(`insert into public.articles (title, slug, status, published_at, ai_generated, auto_published)
+                    values ('Auto story','auto-story','published', now(), true, true)`);
+    await expect(db.query(`insert into public.articles (title, slug, status, published_at, ai_generated)
+                           values ('Unreviewed bot','unreviewed-bot','published', now(), true)`)).rejects.toThrow();
+  });
+});

@@ -39,6 +39,7 @@ const FEATURES: FieldDef[] = [
   { name: "newsletter", label: "Show newsletter sign-up forms", type: "checkbox" }, { name: "breakingTicker", label: "Show breaking-news banner on the homepage", type: "checkbox" },
   { name: "newsletterHeadline", label: "Newsletter headline" }, { name: "newsletterBlurb", label: "Newsletter description" },
   { name: "sponsoredLabel", label: "Sponsored-content label" },
+  { name: "autoPublishHours", label: "Auto-publish drafts after (hours)", type: "number", hint: "0 = off. When above 0, machine-written drafts that nobody has edited are published automatically after this many hours, with a visible label saying they were not reviewed by an editor. Requires migration 0006 in Supabase." },
   { name: "affiliateDisclosure", label: "Affiliate disclosure text", type: "textarea", hint: "Shown on affiliate articles and any article flagged as containing affiliate links." },
 ];
 

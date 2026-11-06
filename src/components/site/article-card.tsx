@@ -33,8 +33,8 @@ export function ArticleCard({
     return (
       <article className="group">
         <Link href={href} className="card-link block">
-          <SmartImage src={a.featured_image_url} alt={a.featured_image_alt ?? a.title} sizes="(min-width:1024px) 640px, 100vw" aspect="aspect-[16/10]" priority={priority} fallbackLabel={label} />
-          <div className="mt-4">
+          {a.featured_image_url && <SmartImage src={a.featured_image_url} alt={a.featured_image_alt ?? a.title} sizes="(min-width:1024px) 640px, 100vw" aspect="aspect-[16/10]" priority={priority} fallbackLabel={label} />}
+          <div className={a.featured_image_url ? "mt-4" : "border-t-2 border-ink pt-4"}>
             <Meta a={a} />
             <h2 className="headline mt-2 text-3xl sm:text-4xl lg:text-[2.6rem]"><TypeFlag a={a} />{a.title}</h2>
             {a.excerpt && <p className="mt-3 text-lg leading-snug text-body">{a.excerpt}</p>}
@@ -49,8 +49,8 @@ export function ArticleCard({
     return (
       <article>
         <Link href={href} className="card-link block">
-          <SmartImage src={a.featured_image_url} alt={a.featured_image_alt ?? a.title} sizes="(min-width:1024px) 400px, (min-width:640px) 50vw, 100vw" aspect="aspect-[3/2]" priority={priority} fallbackLabel={label} />
-          <div className="mt-3">
+          {a.featured_image_url && <SmartImage src={a.featured_image_url} alt={a.featured_image_alt ?? a.title} sizes="(min-width:1024px) 400px, (min-width:640px) 50vw, 100vw" aspect="aspect-[3/2]" priority={priority} fallbackLabel={label} />}
+          <div className={a.featured_image_url ? "mt-3" : "border-t border-rule pt-3"}>
             <Meta a={a} />
             <h3 className="headline mt-1.5 text-xl sm:text-2xl"><TypeFlag a={a} />{a.title}</h3>
             {a.excerpt && <p className="mt-2 line-clamp-3 text-[0.95rem] text-body">{a.excerpt}</p>}
@@ -68,9 +68,11 @@ export function ArticleCard({
             <Meta a={a} />
             <h3 className="headline mt-1 text-base sm:text-[1.05rem]"><TypeFlag a={a} />{a.title}</h3>
           </div>
-          <div className="w-24 shrink-0 sm:w-28">
-            <SmartImage src={a.featured_image_url} alt="" sizes="112px" aspect="aspect-square" fallbackLabel={label} />
-          </div>
+          {a.featured_image_url && (
+            <div className="w-24 shrink-0 sm:w-28">
+              <SmartImage src={a.featured_image_url} alt="" sizes="112px" aspect="aspect-square" fallbackLabel={label} />
+            </div>
+          )}
         </Link>
       </article>
     );
@@ -93,8 +95,8 @@ export function ArticleCard({
   return (
     <article>
       <Link href={href} className="card-link block">
-        <SmartImage src={a.featured_image_url} alt={a.featured_image_alt ?? a.title} sizes="(min-width:1024px) 300px, (min-width:640px) 33vw, 100vw" aspect="aspect-[3/2]" priority={priority} fallbackLabel={label} />
-        <div className="mt-3">
+        {a.featured_image_url && <SmartImage src={a.featured_image_url} alt={a.featured_image_alt ?? a.title} sizes="(min-width:1024px) 300px, (min-width:640px) 33vw, 100vw" aspect="aspect-[3/2]" priority={priority} fallbackLabel={label} />}
+        <div className={a.featured_image_url ? "mt-3" : "border-t border-rule pt-3"}>
           <Meta a={a} />
           <h3 className="headline mt-1.5 text-lg"><TypeFlag a={a} />{a.title}</h3>
         </div>

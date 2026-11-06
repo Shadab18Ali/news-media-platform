@@ -26,3 +26,10 @@ Safeguards: key required (503 if not configured), rate limit 60/hour, body sanit
 * ChatGPT acts when **you** ask; it does not post on a timer by itself. Timer-based drafting would be a server job (see `CONTENT_PUBLISHING_GUIDE.md`).
 * Rewriting other publishers' articles is a copyright and search-quality risk even with a link; use sources for facts and write original analysis.
 * Rotate the key (change it in Vercel and the GPT) if it is ever exposed.
+
+## Optional: auto-publish after a review window
+`POST /api/connector/auto-publish` publishes machine-written **drafts that nobody has edited** for N hours. It is **off by default**: set *Admin → Site settings → Features → "Auto-publish drafts after (hours)"* (e.g. 2) after running migration `20260101000006_auto_publish.sql`.
+* Only connector drafts (machine-written) that pass the normal completeness rules (category, excerpt, ≥1 source link, body text) are published. Opening and saving a draft, or deleting it, takes it out of the automatic flow.
+* Published stories are flagged `auto_published` and show a visible label: *written with automated tools … published automatically without review by an editor*. The Editorial Policy page changes to describe this honestly.
+* The scheduled writer calls this endpoint at the end of each run, so the effective delay is the window plus up to one run interval.
+* Risks you accept by turning it on: errors in unreviewed stories go live, and search engines and AdSense may treat mostly automated output as low-quality. Set the value to 0 to switch it off at any time.

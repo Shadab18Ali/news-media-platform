@@ -90,6 +90,7 @@ export interface Article {
   editorial_notes: string | null;
   sources: SourceRef[];
   ai_generated: boolean;
+  auto_published: boolean;
   fact_checked: boolean;
   human_reviewed_by: string | null;
   human_reviewed_at: string | null;

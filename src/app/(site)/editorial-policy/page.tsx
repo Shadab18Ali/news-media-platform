@@ -17,7 +17,11 @@ export default async function EditorialPolicyPage() {
       <h2>Authorship and transparency</h2>
       <p>Each article names its author and shows when it was published and last updated. Author profiles are on our <Link href="/authors">Authors page</Link>.</p>
       <h2>Use of automated tools</h2>
-      <p>Automated tools may assist with research, drafting or summarising. Nothing is published unless a human editor has reviewed it and verified its facts. Any story substantially prepared with such tools carries a disclosure.</p>
+      {s.features.autoPublishHours > 0 ? (
+        <p>Automated tools help us draft stories from named, linked sources. Most are reviewed and fact-checked by an editor before publication. Some drafts are published automatically after a short window of about {s.features.autoPublishHours} hour{s.features.autoPublishHours === 1 ? "" : "s"} if no editor has changed them; every such story carries a visible label saying it was published without editor review. We correct errors promptly (see below).</p>
+      ) : (
+        <p>Automated tools may assist with research, drafting or summarising. Nothing is published unless a human editor has reviewed it and verified its facts. Any story substantially prepared with such tools carries a disclosure.</p>
+      )}
       <h2>Images</h2>
       <p>We use images we own, have licensed, or that are created for us, and we do not use other publishers’ photographs without permission. Image credits and captions are provided where applicable.</p>
       <h2>Corrections</h2>

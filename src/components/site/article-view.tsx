@@ -104,7 +104,12 @@ export function ArticleView({ article: a, settings, related = [], adjacent, most
             </section>
           )}
 
-          {a.ai_generated && a.human_reviewed_at && (
+          {a.auto_published && (
+            <p role="note" className="mt-6 rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+              <strong>Automated story.</strong> This story was written with automated tools from the sources linked above and was published automatically <strong>without review by an editor</strong>. If you spot an error, please tell us via our <Link className="underline" href="/contact">contact page</Link>; see our <Link className="underline" href="/corrections-policy">Corrections Policy</Link>.
+            </p>
+          )}
+          {a.ai_generated && a.human_reviewed_at && !a.auto_published && (
             <p className="meta mt-6 rounded bg-wash p-3">This story was prepared with the help of automated drafting tools and was reviewed and fact-checked by our editors before publication. See our <Link className="underline" href="/editorial-policy">Editorial Policy</Link>.</p>
           )}
 
