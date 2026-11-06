@@ -6,6 +6,7 @@ The connector is a small authenticated API. An external writer (for example a **
 | Method & path | Purpose |
 |---|---|
 | `GET /api/connector/categories` | Valid category slugs and author slugs |
+| `GET /api/connector/articles` | Headlines from the last 3 days (avoid repeating stories) |
 | `POST /api/connector/articles` | Create a draft (title, excerpt, `content_html`, `category_slug`, `sources[]` ≥ 1 https link, optional tags/SEO/author/image idea) |
 | `GET /api/connector/openapi.json` | Machine-readable description to import into a Custom GPT |
 

@@ -11,6 +11,17 @@ import { absoluteUrl, readingTime, slugify, stripHtml } from "@/lib/utils";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/** Recent headlines (last 3 days, any status) so a writer can avoid repeating stories. */
+export async function GET(req: Request) {
+  const denied = checkConnectorAuth(req);
+  if (denied) return denied;
+  const db = createServiceClient();
+  if (!db) return NextResponse.json({ error: "Server is not configured" }, { status: 503 });
+  const since = new Date(Date.now() - 3 * 86400_000).toISOString();
+  const { data } = await db.from("articles").select("title,status,category:categories(slug),created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(200);
+  return NextResponse.json({ recent: data ?? [] });
+}
+
 /**
  * Creates a DRAFT article from an external writer. It can never publish: the article is flagged as
  * machine-assisted and unverified, and the database refuses to publish it until an editor reviews it.

@@ -13,6 +13,7 @@ export function GET() {
         get: { operationId: "listCategories", summary: "List valid category slugs and author slugs", responses: { "200": { description: "OK" } } },
       },
       "/api/connector/articles": {
+        get: { operationId: "listRecentArticles", summary: "List headlines from the last 3 days to avoid repeating stories", responses: { "200": { description: "OK" } } },
         post: {
           operationId: "submitDraftArticle",
           summary: "Submit an original article as a DRAFT",
