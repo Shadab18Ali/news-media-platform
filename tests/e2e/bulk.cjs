@@ -1,0 +1,45 @@
+/* Bulk publish check. Needs the local stack running (see README) plus CONNECTOR_API_KEY. */
+const { chromium } = require("playwright");
+const { execSync } = require("node:child_process");
+const BASE = "http://localhost:3100", K = process.env.CONNECTOR_API_KEY;
+const sql = (q) => execSync(`psql -h 127.0.0.1 -p 54329 -U postgres -t -A -c ${JSON.stringify(q)}`).toString().trim();
+let bad = 0; const check = (n, ok, x = "") => { console.log(`${ok ? "PASS" : "FAIL"}  ${n}${ok ? "" : "  " + x}`); if (!ok) bad++; };
+const body = (i, cat = "technology") => JSON.stringify({ title: `Bulk test article number ${i} on topic`, excerpt: "A standfirst that is long enough.", content_html: `<h2>Heading</h2><p>${"Facts from the source document. ".repeat(20)}</p>`, category_slug: cat, sources: [{ title: "Src", url: "https://example.com/s" + i }] });
+(async () => {
+  sql("insert into categories (name,slug) values ('Sports','sports') on conflict do nothing");
+  for (let i = 1; i <= 4; i++) execSync(`curl -s -o /dev/null -H "Authorization: Bearer ${K}" -H "Content-Type: application/json" -d '${body(i, i === 4 ? "sports" : "technology")}' ${BASE}/api/connector/articles`);
+  sql("insert into categories (name,slug) values ('Sports','sports') on conflict do nothing");
+  check("4 drafts created through connector", sql("select count(*) from articles where status='draft'") === "4");
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1360, height: 900 } });
+  await p.goto(`${BASE}/admin/login`); await p.fill("#email", "editor@example.test"); await p.fill("#password", "Passw0rd!test"); await p.click('button:has-text("Sign in")'); await p.waitForURL(`${BASE}/admin`);
+  await p.goto(`${BASE}/admin/articles`);
+  await p.check('input[aria-label="Select all drafts on this page"]');
+  check("select-all counts 4", (await p.textContent("#bulk-form")).includes("4 selected"));
+  p.once("dialog", (d) => d.accept());
+  await p.click('button:has-text("Publish selected")');
+  await p.waitForSelector("text=Please tick the confirmation");
+  check("bulk publish refused without confirmation", sql("select count(*) from articles where status='published'") === "0");
+  await p.check('input[aria-label="Select all drafts on this page"]');
+  await p.check('input[name="confirm"]');
+  await p.selectOption('select[name="release"]', "10");
+  p.once("dialog", (d) => d.accept());
+  await p.click('button:has-text("Publish selected")');
+  await p.waitForSelector("text=scheduled, one every 10 minutes");
+  const s = sql("select count(*) from articles where status='scheduled' and human_reviewed_at is not null and fact_checked").trim();
+  check("timed release scheduled 4, review recorded", s === "4", s);
+  const gaps = sql("select extract(epoch from (scheduled_for - lag(scheduled_for) over (order by scheduled_for)))/60 from articles where status='scheduled' order by scheduled_for").split("\n").filter(Boolean);
+  check("10-minute spacing", gaps.slice(1).every((g) => Math.round(Number(g)) === 10), gaps.join(","));
+  sql("update articles set status='draft', scheduled_for=null where status='scheduled'");
+  sql("update articles set excerpt=null where title like '%number 2 %'");
+  await p.goto(`${BASE}/admin/articles`);
+  await p.check('input[aria-label="Select all drafts on this page"]'); await p.check('input[name="confirm"]');
+  p.once("dialog", (d) => d.accept());
+  await p.click('button:has-text("Publish selected")');
+  await p.waitForSelector("text=3 article(s) published");
+  check("publishes valid ones, skips incomplete with reason", (await p.textContent("main")).includes("no excerpt") && sql("select count(*) from articles where status='published'") === "3");
+  const pub = await b.newPage(); const r = await pub.goto(`${BASE}/`);
+  check("published articles are live on the homepage", (await pub.textContent("main")).includes("Bulk test article number 1"));
+  // writer cannot use it
+  await b.close();
+  console.log(bad ? `${bad} FAILED` : "bulk publish: all checks passed"); process.exit(bad ? 1 : 0);
+})().catch((e) => { console.error(e); process.exit(2); });

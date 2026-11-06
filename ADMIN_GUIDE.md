@@ -11,6 +11,9 @@ Counts of total/published/draft/scheduled articles and categories, recent articl
 * **List**: filter by status/category, search, edit, view live, **duplicate**, delete. Changing the slug of a live article automatically creates a 301 redirect from the old URL. Every save keeps a revision.
 * Publishing requires: body text, a category, an excerpt, and alt text if there is a featured image.
 
+### Publishing many drafts at once
+In **Articles**, tick the drafts (or *Select all drafts on this page*), choose **Release: all now** or **one every 5/10/30/60 minutes**, tick the confirmation that you reviewed them and checked the facts, and click **Publish selected**. Incomplete drafts (no category, excerpt, sources for machine-written ones, alt text for images) are skipped and listed with the reason. Timed releases are published by the scheduler.
+
 ## Categories, authors
 Add/edit/delete with descriptions, images and SEO fields (categories) or bio, photo and social links (authors). A category with articles cannot be deleted; deleting an author keeps their articles (without a byline).
 

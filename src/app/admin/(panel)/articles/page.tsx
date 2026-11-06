@@ -5,6 +5,7 @@ import { listCategories } from "@/lib/admin/queries";
 import { deleteArticle, duplicateArticle } from "../../_actions/articles";
 import { Card, Empty, LinkButton, Notice, PageHeader, StatusBadge } from "@/components/admin/layout-bits";
 import { SubmitButton, inputCls } from "@/components/admin/ui";
+import { BulkBar } from "@/components/admin/bulk-bar";
 import { ARTICLE_STATUSES } from "@/config/site";
 import { escapeLike, formatDateTime, pageFromParam } from "@/lib/utils";
 
@@ -39,6 +40,7 @@ export default async function ArticlesPage({ searchParams }: { searchParams: Pro
       {sp.deleted && <div className="mb-4"><Notice tone="success">Article deleted.</Notice></div>}
       {sp.updated && <div className="mb-4"><Notice tone="success">Article updated.</Notice></div>}
       {error && <div className="mb-4"><Notice tone="warn">Could not load articles. Check your Supabase connection.</Notice></div>}
+      {sp.bulk && <div className="mb-4"><Notice tone={sp.bulk.startsWith("ok:") ? "success" : "warn"}>{sp.bulk.replace(/^(ok|error):/, "")}</Notice></div>}
       <Card>
         <form className="mb-4 flex flex-wrap items-end gap-3" role="search">
           <div><label htmlFor="f-q" className="text-xs font-semibold">Search</label><input id="f-q" name="q" defaultValue={q} placeholder="Title or slug" className={inputCls} /></div>
@@ -49,16 +51,18 @@ export default async function ArticlesPage({ searchParams }: { searchParams: Pro
           <button className="inline-flex items-center gap-1.5 rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white"><Search className="h-4 w-4" aria-hidden="true" />Filter</button>
         </form>
 
+        {isEditor && rows.some((r) => ["draft", "in_review"].includes(r.status)) && <BulkBar />}
         {rows.length === 0 ? <Empty>No articles match. <Link className="underline" href="/admin/articles/new">Create the first one</Link>.</Empty> : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[820px] text-left text-sm">
               <caption className="sr-only">Articles</caption>
-              <thead><tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500"><th scope="col" className="py-2 pr-3">Title</th><th scope="col" className="px-3">Status</th><th scope="col" className="px-3">Category</th><th scope="col" className="px-3">Author</th><th scope="col" className="px-3">Date (IST)</th><th scope="col" className="px-3 text-right">Views</th><th scope="col" className="pl-3 text-right">Actions</th></tr></thead>
+              <thead><tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">{isEditor && <th scope="col" className="w-8 py-2"><span className="sr-only">Select</span></th>}<th scope="col" className="py-2 pr-3">Title</th><th scope="col" className="px-3">Status</th><th scope="col" className="px-3">Category</th><th scope="col" className="px-3">Author</th><th scope="col" className="px-3">Date (IST)</th><th scope="col" className="px-3 text-right">Views</th><th scope="col" className="pl-3 text-right">Actions</th></tr></thead>
               <tbody className="divide-y divide-slate-100">
                 {rows.map((a) => {
                   const canDelete = isEditor || (a.created_by === ctx.user.id && a.status === "draft");
                   return (
                     <tr key={a.id} className="align-top">
+                      {isEditor && <td className="py-3">{["draft", "in_review"].includes(a.status) && <input type="checkbox" name="ids" value={a.id} form="bulk-form" className="h-4 w-4" aria-label={`Select ${a.title}`} />}</td>}
                       <td className="py-3 pr-3"><Link href={`/admin/articles/${a.id}/edit`} className="font-semibold text-slate-900 hover:underline">{a.title}</Link><p className="text-xs text-slate-500">/news/{a.slug}{a.article_type !== "article" && ` · ${a.article_type}`}</p></td>
                       <td className="px-3"><StatusBadge status={a.status} /></td>
                       <td className="px-3">{a.category?.name ?? "—"}</td>
