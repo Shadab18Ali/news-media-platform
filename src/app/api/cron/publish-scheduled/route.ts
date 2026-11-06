@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { isAuthorizedCron } from "@/lib/security/request";
+import { runAutoPublish } from "@/lib/connector/auto-publish";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -29,7 +30,12 @@ export async function GET(req: NextRequest) {
 
   const published = (data ?? []) as { id: string; title: string; slug: string }[];
   if (published.length) revalidatePath("/", "layout");
-  return NextResponse.json({ ok: true, published: published.length, articles: published.map((p) => ({ id: p.id, slug: p.slug })), ranAt: new Date().toISOString() });
+
+  // Also publish machine-written drafts whose review window (Admin > Site settings) has passed.
+  let auto = { enabled: false, published: 0 } as Awaited<ReturnType<typeof runAutoPublish>>;
+  try { auto = await runAutoPublish(supabase); } catch (e) { console.error("[cron:auto-publish]", e instanceof Error ? e.message : e); }
+
+  return NextResponse.json({ ok: true, published: published.length, articles: published.map((p) => ({ id: p.id, slug: p.slug })), autoPublished: auto.published, autoPublishEnabled: auto.enabled, ranAt: new Date().toISOString() });
 }
 
 export const POST = GET;
