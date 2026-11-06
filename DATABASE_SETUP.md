@@ -7,12 +7,13 @@ No credentials are included in this repository. You create your own free Supabas
 2. When it is ready open **Project Settings → API** and copy: **Project URL**, **anon public key**, **service_role key** (keep this one secret).
 
 ## 2. Run the migrations
-Open **SQL Editor → New query** and run each file from `supabase/migrations/`, **in order**:
+Open **SQL Editor → New query** and run each of the **five** files from `supabase/migrations/`, **in order**:
 
 1. `20260101000001_schema.sql` — tables, constraints, indexes, triggers, scheduler function
 2. `20260101000002_rls.sql` — Row Level Security policies
 3. `20260101000003_storage.sql` — public `media` bucket + upload policies
 4. `20260101000004_seed.sql` — ten starter categories (no articles)
+5. `20260101000005_api_privileges.sql` — lets the website's Data API reach the tables (required on newer Supabase projects, which do not grant table access automatically; Row Level Security still controls which rows are visible)
 
 (Or with the Supabase CLI: `supabase link --project-ref <ref>` then `supabase db push`.)
 
@@ -42,3 +43,6 @@ Key rules enforced **in the database**: published articles need a date; schedule
 
 ## Verifying
 `npm run test:db` applies all migrations to an in-memory Postgres and tests the RLS rules and the scheduler function.
+
+## Troubleshooting
+* **Sign-in says "This account does not have dashboard access" although the role is `admin`**, or the site shows no data: migration 5 (API privileges) has not been run. Run it, then try again.
